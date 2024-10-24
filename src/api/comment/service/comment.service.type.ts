@@ -4,7 +4,7 @@ import { CommentResponseDto } from "../dto/commentResponse.dto";
 export interface CommentService {
   getComments(): Promise<CommentListResponseDto>;
   getComment(commentId: string): Promise<CommentResponseDto>;
-  createComment(comment: IComment): Promise<CommentResponseDto>;
-  updateComment(commentId: string, comment: IComment): Promise<void>;
+  createComment(comment: Omit<IComment, "id" | "post">, postId: string): Promise<CommentResponseDto>;
+  updateComment(commentId: string, comment: Pick<IComment, "content">): Promise<void>;
   deleteComment(commentId: string): Promise<void>;
 }

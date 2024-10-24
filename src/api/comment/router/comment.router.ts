@@ -4,6 +4,7 @@ import express from "express";
 import CommentController from "../controller/comment.controller";
 import CommentServiceImpl from "../service/comment.service";
 import { MemoryCommentRepository } from "../repository/memoryComment.repository";
+import { MemoryPostRepository } from "@/api/post/repository/memoryPost.repository";
 
 const commentRouter = express.Router();
 
@@ -15,7 +16,7 @@ const COMMENT_ROUTES = {
   DELETE_COMMENT: "/api/comment/:commentId",
 } as const;
 
-const commentController = new CommentController(new CommentServiceImpl(new MemoryCommentRepository()));
+const commentController = new CommentController(new CommentServiceImpl(new MemoryCommentRepository(), new MemoryPostRepository()));
 
 commentRouter.get(extractPath(COMMENT_ROUTES.GET_COMMENTS, ROUTES_INDEX.COMMENT_API), commentController.getComments);
 

@@ -13,12 +13,16 @@ export class MongooseRepository implements CommentRepository {
     }
     return comment;
   }
-  async save(comment: IComment): Promise<IComment> {
-    const newComment = new MongooseComment(comment);
+  async save(comment: Omit<IComment, "id" | "post">, post: IPost): Promise<IComment> {
+    const newComment = new MongooseComment({
+      post: post,
+      content: comment.content,
+      ip: comment.ip,
+    });
     await newComment.save();
     return newComment;
   }
-  async update(commentId: string, comment: IComment): Promise<void> {
+  async update(commentId: string, comment: Pick<IComment, "content">): Promise<void> {
     const isCommentExist = await MongooseComment.exists({ _id: commentId });
     if (!isCommentExist) {
       throw new Error("Comment not found");

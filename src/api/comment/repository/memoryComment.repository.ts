@@ -14,24 +14,25 @@ export class MemoryCommentRepository implements CommentRepository {
     }
     return comment;
   }
-  async save(comment: IComment): Promise<IComment> {
+  async save(comment: Omit<IComment, "id" | "post">, post: IPost): Promise<IComment> {
     const newComment = new Comment({
-      id: MemoryCommentRepository.index.toString(),
-      post: comment.post,
+      id: String(MemoryCommentRepository.index++),
+      post: post,
       content: comment.content,
       ip: comment.ip,
     });
     MemoryCommentRepository.store.set(newComment.id, newComment);
-    MemoryCommentRepository.index++;
     return newComment;
   }
-  async update(commentId: string, comment: IComment): Promise<void> {
-    const updatedComment = new Comment({
-      id: commentId,
-      post: comment.post,
+  async update(commentId: string, comment: Pick<IComment, "content">): Promise<void> {
+    const targetComment = MemoryCommentRepository.store.get(commentId);
+    if (!targetComment) {
+      throw new Error("Comment not found");
+    }
+    const updatedComment = {
+      ...targetComment,
       content: comment.content,
-      ip: comment.ip,
-    });
+    };
     MemoryCommentRepository.store.set(commentId, updatedComment);
     return;
   }

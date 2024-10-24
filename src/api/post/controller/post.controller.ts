@@ -12,7 +12,7 @@ export default class PostController {
     this.updatePost = this.updatePost.bind(this);
     this.deletePost = this.deletePost.bind(this);
   }
-  async getPosts(req: Request, res: Response, next: NextFunction) {
+  async getPosts(req: Request<getPostsRequest["path"], getPostsResponse, getPostsRequest["body"], getPostsRequest["params"]>, res: Response, next: NextFunction) {
     try {
       const posts = await this._postService.getPosts();
       res.send(posts);
@@ -20,46 +20,58 @@ export default class PostController {
       next(error);
     }
   }
-  async getCommentsByPostId(req: Request, res: Response, next: NextFunction) {
+  async getCommentsByPostId(
+    req: Request<getCommentsByPostIdRequest["path"], getCommentsByPostIdResponse, getCommentsByPostIdRequest["body"], getCommentsByPostIdRequest["params"]>,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const postId = req.params.postId;
+      const { postId } = req.params;
       const comments = await this._postService.getCommentsByPostId(postId);
       res.send(comments);
     } catch (error) {
       next(error);
     }
   }
-  async getPost(req: Request, res: Response, next: NextFunction) {
+  async getPost(req: Request<getPostRequest["path"], getPostResponse, getPostRequest["body"], getPostRequest["params"]>, res: Response, next: NextFunction) {
     try {
-      const postId = req.params.postId;
+      const { postId } = req.params;
       const post = await this._postService.getPost(postId);
       res.send(post);
     } catch (error) {
       next(error);
     }
   }
-  async createPost(req: Request, res: Response, next: NextFunction) {
+  async createPost(req: Request<createPostRequest["path"], createPostResponse, createPostRequest["body"], createPostRequest["params"]>, res: Response, next: NextFunction) {
     try {
-      const post = req.body;
-      const createdPost = await this._postService.createPost(post);
+      const { title, content, ip } = req.body;
+      const createdPost = await this._postService.createPost({
+        title,
+        content,
+        ip,
+      });
       res.send(createdPost);
     } catch (error) {
       next(error);
     }
   }
-  async updatePost(req: Request, res: Response, next: NextFunction) {
+  async updatePost(req: Request<updatePostRequest["path"], unknown, updatePostRequest["body"], updatePostRequest["params"]>, res: Response, next: NextFunction) {
     try {
       const postId = req.params.postId;
-      const post = req.body;
-      await this._postService.updatePost(postId, post);
+      const { title, content, ip } = req.body;
+      await this._postService.updatePost(postId, {
+        title,
+        content,
+        ip,
+      });
       res.status(204).send();
     } catch (error) {
       next(error);
     }
   }
-  async deletePost(req: Request, res: Response, next: NextFunction) {
+  async deletePost(req: Request<deletePostRequest["path"], unknown, deletePostRequest["body"], deletePostRequest["params"]>, res: Response, next: NextFunction) {
     try {
-      const postId = req.params.postId;
+      const { postId } = req.params;
       await this._postService.deletePost(postId);
       res.status(204).send();
     } catch (error) {
