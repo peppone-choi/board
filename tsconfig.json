@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext" /** 컴파일된 코드가 어떤 버전의 자바스크립트로 컴파일 될지 결정 */,
+    "module": "CommonJS",
+    "sourceMap": true /** Source map 사용 */,
+    "declaration": true /** 선언 파일 */,
+    "outDir": "dist" /** 컴파일된 파일 출력 */,
+    "allowJs": true /** 타입스크립트 프로젝트에서 JAVAscript 사용가능 */,
+    "baseUrl": "./" /** 기본 URL */,
+    "noEmit": false /** 컴파일된 파일을 생성하지 않음 */,
+    "esModuleInterop": true /** ES6 모듈을 CommonJS 모듈로 변환 */,
+    "strict": true /** 타입스크립트의 엄격한 모드 */,
+    "inlineSources": true /** 소스맵을 하나의 파일로 생성 */,
+    "resolveJsonModule": true /** JSON 파일을 모듈로 사용 가능 */,
+    "skipLibCheck": true /** 라이브러리 체크 생략 */,
+    "incremental": true /** 증분 컴파일 */,
+    "typeRoots": [/** 타입 파일 경로 */ "node_modules/@types", "src/@types/**/*"] /** 타입 관련 파일 */,
+    "experimentalDecorators": true /** 데코레이터 사용을 위함 */,
+    "emitDecoratorMetadata": true /** 데코레이터 사용을 위함 */,
+    "paths": {
+      "@/*": ["src/*"] /** Absoulute Paths */
+    }
+  },
+  "ts-node": {
+    "files": true /** Declaration Type 필수 */
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.test.js"]
+}

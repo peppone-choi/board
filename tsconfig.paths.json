@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./" /** 기본 URL */,
+    "paths": {
+      "@/*": ["src/*"] /** Absoulute Paths */
+    }
+  }
+}
