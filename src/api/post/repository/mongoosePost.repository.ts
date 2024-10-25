@@ -1,10 +1,10 @@
 import { MongoosePost } from "../model/post.schema";
 import { PostRepository } from "./post.repository";
 
-export class MongooseRepository implements PostRepository {
+export class MongoosePostRepository implements PostRepository {
   async findAll(page: number, limit: number): Promise<IPost[]> {
     const posts = await MongoosePost.find()
-      .skip((page - 1) * limit)
+      .skip(limit * (page - 1))
       .limit(limit);
     return posts;
   }

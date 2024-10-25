@@ -5,6 +5,8 @@ import CommentController from "../controller/comment.controller";
 import CommentServiceImpl from "../service/comment.service";
 import { MemoryCommentRepository } from "../repository/memoryComment.repository";
 import { MemoryPostRepository } from "@/api/post/repository/memoryPost.repository";
+import { MongooseCommentRepository } from "../repository/mongooseComment.repository";
+import { MongoosePostRepository } from "@/api/post/repository/mongoosePost.repository";
 
 const commentRouter = express.Router();
 
@@ -16,7 +18,7 @@ const COMMENT_ROUTES = {
   DELETE_COMMENT: "/api/comment/:commentId",
 } as const;
 
-const commentController = new CommentController(new CommentServiceImpl(new MemoryCommentRepository(), new MemoryPostRepository()));
+const commentController = new CommentController(new CommentServiceImpl(new MongooseCommentRepository(), new MongoosePostRepository()));
 
 commentRouter.get(extractPath(COMMENT_ROUTES.GET_COMMENTS, ROUTES_INDEX.COMMENT_API), commentController.getComments);
 

@@ -16,6 +16,7 @@ export default class PostController {
     try {
       const { page, limit } = req.query;
       const posts = await this._postService.getPosts(page, limit);
+      console.log(posts);
       res.send(posts);
     } catch (error) {
       next(error);

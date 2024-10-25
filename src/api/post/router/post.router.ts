@@ -4,6 +4,7 @@ import express from "express";
 import PostController from "../controller/post.controller";
 import PostServiceImpl from "../service/post.service";
 import { MemoryPostRepository } from "../repository/memoryPost.repository";
+import { MongoosePostRepository } from "../repository/mongoosePost.repository";
 
 const postRouter = express.Router();
 
@@ -16,7 +17,7 @@ const POST_ROUTES = {
   DELETE_POST: "/api/post/:postId",
 } as const;
 
-const postController = new PostController(new PostServiceImpl(new MemoryPostRepository()));
+const postController = new PostController(new PostServiceImpl(new MongoosePostRepository()));
 
 postRouter.get(extractPath(POST_ROUTES.GET_POSTS, ROUTES_INDEX.POST_API), postController.getPosts);
 

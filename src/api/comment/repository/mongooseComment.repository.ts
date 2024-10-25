@@ -1,7 +1,7 @@
 import { MongooseComment } from "../model/comment.schema";
 import { CommentRepository } from "./comment.repository";
 
-export class MongooseRepository implements CommentRepository {
+export class MongooseCommentRepository implements CommentRepository {
   async findAll(page: number, limit: number): Promise<IComment[]> {
     const comments = await MongooseComment.find()
       .skip((page - 1) * limit)

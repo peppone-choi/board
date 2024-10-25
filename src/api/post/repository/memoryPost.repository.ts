@@ -5,7 +5,7 @@ export class MemoryPostRepository implements PostRepository {
   static index = 0;
   static readonly store: Map<string, Post> = new Map();
   async findAll(page: number, limit: number): Promise<IPost[]> {
-    return Array.from(MemoryPostRepository.store.values()).slice((page - 1) * limit, page * limit);
+    return Array.from(MemoryPostRepository.store.values()).slice(limit * (page - 1), limit * page);
   }
   async findById(postId: string): Promise<IPost> {
     const post = MemoryPostRepository.store.get(postId);
@@ -26,7 +26,7 @@ export class MemoryPostRepository implements PostRepository {
     if (!post) {
       throw new Error("Post not found");
     }
-    const comments = post.comment.slice((page - 1) * limit, page * limit);
+    const comments = post.comment.slice(page * limit, page * limit);
     return {
       comment: comments,
       totalPage: Math.ceil(post.comment.length / limit),
@@ -34,7 +34,7 @@ export class MemoryPostRepository implements PostRepository {
   }
   async save(post: Omit<IPost, "id" | "comment">): Promise<IPost> {
     const newPost = new Post({
-      id: String(MemoryPostRepository.index++),
+      id: String(MemoryPostRepository.index++ + 1),
       title: post.title,
       content: post.content,
       ip: post.ip,
