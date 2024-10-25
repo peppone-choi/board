@@ -1,16 +1,16 @@
 import { PostResponseDto } from "./postResponse.dto";
 
 export class PostListResponseDto {
-  prov: string;
-  next: string;
+  prov: string | null;
+  next: string | null;
   posts: PostResponseDto[];
-  countAll: number;
+  pageAll: number;
   count: number;
-  constructor(posts: IPost[], prov: string, next: string) {
+  constructor(posts: IPost[], pageAll: number, prov: string | null, next: string | null) {
     this.posts = posts.map((post) => new PostResponseDto(post));
-    this.countAll = posts.length;
+    this.pageAll = pageAll;
     this.count = posts.length;
-    this.prov = prov;
-    this.next = next;
+    this.prov = prov && null;
+    this.next = next && null;
   }
 }

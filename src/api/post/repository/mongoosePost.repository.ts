@@ -2,8 +2,10 @@ import { MongoosePost } from "../model/post.schema";
 import { PostRepository } from "./post.repository";
 
 export class MongooseRepository implements PostRepository {
-  async findAll(): Promise<IPost[]> {
-    const posts = await MongoosePost.find();
+  async findAll(page: number, limit: number): Promise<IPost[]> {
+    const posts = await MongoosePost.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
     return posts;
   }
   async findById(postId: string): Promise<IPost> {
@@ -13,12 +15,23 @@ export class MongooseRepository implements PostRepository {
     }
     return post;
   }
-  async findCommentsByPostId(postId: string): Promise<IComment[]> {
+  async findCommentsByPostId(
+    postId: string,
+    page: number,
+    limit: number
+  ): Promise<{
+    comment: IComment[];
+    totalPage: number;
+  }> {
     const post = await MongoosePost.findById(postId).populate("comment");
     if (!post) {
       throw new Error("Post not found");
     }
-    return post.comment;
+    const comments = post.comment.slice((page - 1) * limit, page * limit);
+    return {
+      comment: comments,
+      totalPage: Math.ceil(post.comment.length / limit),
+    };
   }
   async save(post: Omit<IPost, "id" | "comment">): Promise<IPost> {
     const newPost = new MongoosePost(post);
@@ -40,5 +53,8 @@ export class MongooseRepository implements PostRepository {
     }
     await MongoosePost.findByIdAndDelete(postId);
     return;
+  }
+  async countAll(): Promise<number> {
+    return await MongoosePost.countDocuments();
   }
 }

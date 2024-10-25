@@ -14,7 +14,8 @@ export default class PostController {
   }
   async getPosts(req: Request<getPostsRequest["path"], getPostsResponse, getPostsRequest["body"], getPostsRequest["params"]>, res: Response, next: NextFunction) {
     try {
-      const posts = await this._postService.getPosts();
+      const { page, limit } = req.query;
+      const posts = await this._postService.getPosts(page, limit);
       res.send(posts);
     } catch (error) {
       next(error);
@@ -27,7 +28,8 @@ export default class PostController {
   ) {
     try {
       const { postId } = req.params;
-      const comments = await this._postService.getCommentsByPostId(postId);
+      const { page, limit } = req.query;
+      const comments = await this._postService.getCommentsByPostId(postId, page, limit);
       res.send(comments);
     } catch (error) {
       next(error);

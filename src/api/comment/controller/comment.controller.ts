@@ -13,7 +13,8 @@ export default class CommentController {
   }
   async getComments(req: Request<getCommentsRequest["path"], getCommentsResponse, getCommentsRequest["body"], getCommentsRequest["params"]>, res: Response, next: NextFunction) {
     try {
-      const comments = await this._commentService.getComments();
+      const { page, limit } = req.query;
+      const comments = await this._commentService.getComments(page, limit);
       res.send(comments);
     } catch (error) {
       next(error);

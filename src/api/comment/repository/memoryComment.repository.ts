@@ -4,8 +4,8 @@ import { CommentRepository } from "./comment.repository";
 export class MemoryCommentRepository implements CommentRepository {
   static index = 0;
   static readonly store: Map<string, Comment> = new Map();
-  async findAll(): Promise<IComment[]> {
-    return Array.from(MemoryCommentRepository.store.values());
+  async findAll(page: number, limit: number): Promise<IComment[]> {
+    return Array.from(MemoryCommentRepository.store.values()).slice((page - 1) * limit, page * limit);
   }
   async findById(commentId: string): Promise<IComment> {
     const comment = MemoryCommentRepository.store.get(commentId);
@@ -39,5 +39,8 @@ export class MemoryCommentRepository implements CommentRepository {
   async delete(commentId: string): Promise<void> {
     MemoryCommentRepository.store.delete(commentId);
     return;
+  }
+  async countAll(): Promise<number> {
+    return MemoryCommentRepository.store.size;
   }
 }

@@ -1,16 +1,16 @@
 import { CommentResponseDto } from "./commentResponse.dto";
 
 export class CommentListResponseDto {
-  prov: string;
-  next: string;
+  prov: string | null;
+  next: string | null;
   comments: CommentResponseDto[];
-  countAll: number;
-  count: number;
-  constructor(comments: IComment[], prov: string, next: string) {
+  pageAll: number | null;
+  count: number | null;
+  constructor(comments: IComment[], pageAll: number, prov: string | null, next: string | null) {
     this.comments = comments.map((comment) => new CommentResponseDto(comment));
-    this.countAll = comments.length;
+    this.pageAll = pageAll;
     this.count = comments.length;
-    this.prov = prov;
-    this.next = next;
+    this.prov = prov && null;
+    this.next = next && null;
   }
 }

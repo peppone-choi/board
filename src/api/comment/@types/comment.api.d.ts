@@ -1,9 +1,12 @@
 declare type getCommentsRequestPath = unknown;
 declare type getCommentsRequestBody = unknown;
-declare type getCommentsRequestParams = unknown;
+declare type getCommentsRequestParams = {
+  page: number;
+  limit: number;
+};
 
 declare type getCommentsRequest = {
-  params?: getCommentsRequestParams;
+  params: getCommentsRequestParams;
   body?: getCommentsRequestBody;
   path?: getCommentsRequestPath;
 };

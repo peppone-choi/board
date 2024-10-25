@@ -1,9 +1,12 @@
 declare type getPostsRequestPath = unknown;
 declare type getPostsRequestBody = unknown;
-declare type getPostsRequestParams = unknown;
+declare type getPostsRequestParams = {
+  page: number;
+  limit: number;
+};
 
 declare type getPostsRequest = {
-  params?: getPostsRequestParams;
+  params: getPostsRequestParams;
   body?: getPostsRequestBody;
   path?: getPostsRequestPath;
 };
@@ -14,10 +17,13 @@ declare type getCommentsByPostIdRequestPath = {
   postId: string;
 };
 declare type getCommentsByPostIdRequestBody = unknown;
-declare type getCommentsByPostIdRequestParams = unknown;
+declare type getCommentsByPostIdRequestParams = {
+  page: number;
+  limit: number;
+};
 
 declare type getCommentsByPostIdRequest = {
-  params?: getCommentsByPostIdRequestParams;
+  params: getCommentsByPostIdRequestParams;
   body?: getCommentsByPostIdRequestBody;
   path: getCommentsByPostIdRequestPath;
 };

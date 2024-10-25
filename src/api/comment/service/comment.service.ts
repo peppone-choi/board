@@ -11,9 +11,11 @@ export default class CommentServiceImpl implements CommentService {
     this._commentRepository = commentRepository;
     this._postRepository = postRepository;
   }
-  async getComments(): Promise<CommentListResponseDto> {
-    const comments = await this._commentRepository.findAll();
-    return new CommentListResponseDto(comments, "prev", "next");
+  async getComments(page: number, limit: number): Promise<CommentListResponseDto> {
+    const comments = await this._commentRepository.findAll(page, limit);
+    const totalComments = await this._commentRepository.countAll();
+    const totalPage = Math.ceil(totalComments / limit);
+    return new CommentListResponseDto(comments, totalPage ? totalPage : 0, page - 1 < 0 ? null : `?page=${page - 1}&limit=${limit}`, page + 1 > totalPage ? null : `?page=${page + 1}&limit=${limit}`);
   }
   async getComment(commentId: string): Promise<CommentResponseDto> {
     const comment = await this._commentRepository.findById(commentId);

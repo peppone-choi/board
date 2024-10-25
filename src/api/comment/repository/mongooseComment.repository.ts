@@ -2,8 +2,11 @@ import { MongooseComment } from "../model/comment.schema";
 import { CommentRepository } from "./comment.repository";
 
 export class MongooseRepository implements CommentRepository {
-  async findAll(): Promise<IComment[]> {
-    const comments = await MongooseComment.find();
+  async findAll(page: number, limit: number): Promise<IComment[]> {
+    const comments = await MongooseComment.find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("post");
     return comments;
   }
   async findById(commentId: string): Promise<IComment> {
@@ -35,5 +38,8 @@ export class MongooseRepository implements CommentRepository {
       throw new Error("Comment not found");
     }
     await MongooseComment.findByIdAndDelete(commentId);
+  }
+  async countAll(): Promise<number> {
+    return await MongooseComment.countDocuments();
   }
 }

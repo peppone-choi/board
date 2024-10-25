@@ -1,18 +1,22 @@
 import { CommentListResponseDto } from "@/api/comment/dto/commentListResponse.dto";
-import { PostListResponseDto } from "../dto/PostListResponse.dto";
+
 import { PostResponseDto } from "../dto/postResponse.dto";
 import { PostRepository } from "../repository/post.repository";
 import { PostService } from "./post.service.type";
+import { PostListResponseDto } from "../dto/postListResponse.dto";
 
 export default class PostServiceImpl implements PostService {
   private readonly _PostRepository: PostRepository;
   constructor(PostRepository: PostRepository) {
     this._PostRepository = PostRepository;
   }
-  async getPosts(): Promise<PostListResponseDto> {
-    const posts = await this._PostRepository.findAll();
-    return new PostListResponseDto(posts, "prev", "next");
+  async getPosts(page: number, limit: number): Promise<PostListResponseDto> {
+    const posts = await this._PostRepository.findAll(page, limit);
+    const totalPosts = await this._PostRepository.countAll();
+    const totalPage = Math.ceil(totalPosts / limit);
+    return new PostListResponseDto(posts, totalPage ? totalPage : 0, page - 1 < 0 ? null : `?page=${page - 1}&limit=${limit}`, page + 1 > totalPage ? null : `?page=${page + 1}&limit=${limit}`);
   }
+
   async getPost(postId: string): Promise<PostResponseDto> {
     const post = await this._PostRepository.findById(postId);
     return new PostResponseDto(post);
@@ -27,8 +31,13 @@ export default class PostServiceImpl implements PostService {
   async deletePost(postId: string): Promise<void> {
     this._PostRepository.delete(postId);
   }
-  async getCommentsByPostId(postId: string): Promise<CommentListResponseDto> {
-    const comments = await this._PostRepository.findCommentsByPostId(postId);
-    return new CommentListResponseDto(comments, "prev", "next");
+  async getCommentsByPostId(postId: string, page: number, limit: number): Promise<CommentListResponseDto> {
+    const comments = await this._PostRepository.findCommentsByPostId(postId, page, limit);
+    return new CommentListResponseDto(
+      comments.comment,
+      comments.totalPage,
+      page - 1 < 0 ? null : `?page=${page - 1}&limit=${limit}`,
+      page + 1 > comments.totalPage ? null : `?page=${page + 1}&limit=${limit}`
+    );
   }
 }
