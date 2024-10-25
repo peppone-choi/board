@@ -48,7 +48,6 @@ declare type createPostRequestPath = unknown;
 declare type createPostRequestBody = {
   title: string;
   content: string;
-  ip: string;
 };
 declare type createPostRequestParams = unknown;
 

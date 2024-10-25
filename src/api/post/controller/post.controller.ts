@@ -47,11 +47,16 @@ export default class PostController {
   }
   async createPost(req: Request<createPostRequest["path"], createPostResponse, createPostRequest["body"], createPostRequest["params"]>, res: Response, next: NextFunction) {
     try {
-      const { title, content, ip } = req.body;
+      const { title, content } = req.body;
+      const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+      if (!ip) {
+        throw new Error("Invalid IP");
+      }
+      console.log(ip);
       const createdPost = await this._postService.createPost({
         title,
         content,
-        ip,
+        ip: "122.122.122.2",
       });
       res.send(createdPost);
     } catch (error) {
